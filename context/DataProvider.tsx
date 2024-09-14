@@ -26,15 +26,26 @@ export function useData() {
 export function DataProvider({ children }: PropsWithChildren) {
   const [words, setWords] = useState<WordCard[]>([
     {
-      word: 'Test',
-      meaning: 'test def',
-      sentence:
-        'kajsdh kahskdj haskj hakjsd hakjsdh kjahs kdjahds kjahs kjahs kdjashjk',
-      artikel: 'der',
+      word: 'stifte',
+      meaning: 'pen',
+      sentence: 'kajsdh kahskdj haskjhakjsd hakhs kdjashjk',
+      artikel: 'die',
     },
     {
-      word: 'Test2',
-      meaning: 'test def2',
+      word: 'Test3',
+      meaning: '33333',
+      sentence: 'maybe2',
+      artikel: 'der2',
+    },
+    {
+      word: 'Test4',
+      meaning: '444444',
+      sentence: 'maybe2',
+      artikel: 'der2',
+    },
+    {
+      word: 'Test5',
+      meaning: '5555555',
       sentence: 'maybe2',
       artikel: 'der2',
     },

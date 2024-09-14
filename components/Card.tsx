@@ -12,7 +12,7 @@ import Animated, {
 const FlipCard = ({ data }: { data: WordCard }) => {
   const isFlipped = useSharedValue(false);
   const [show, setShow] = useState(true);
-  const duration = 500;
+  const duration = 1000;
 
   const handlePress = () => {
     isFlipped.value = !isFlipped.value;
@@ -23,7 +23,7 @@ const FlipCard = ({ data }: { data: WordCard }) => {
     const rotateValue = withTiming(`${spinValue}deg`, { duration });
 
     return {
-      transform: [{ rotateY: rotateValue }],
+      transform: [{ perspective: 600 }, { rotateY: rotateValue }],
     };
   });
 
@@ -32,13 +32,13 @@ const FlipCard = ({ data }: { data: WordCard }) => {
     const rotateValue = withTiming(`${spinValue}deg`, { duration });
 
     return {
-      transform: [{ rotateY: rotateValue }],
+      transform: [{ perspective: 600 }, { rotateY: rotateValue }],
     };
   });
 
   useEffect(() => {
     setShow(false);
-    setTimeout(() => setShow(true), 500);
+    setTimeout(() => setShow(true), duration);
     isFlipped.value = false;
   }, [data]);
 
