@@ -3,24 +3,56 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Text,
   TouchableOpacity,
+  Alert,
+  ViewStyle,
 } from 'react-native';
-import { useData } from '@/context/DataProvider';
 import Card from '@/components/Card';
 import { Colors } from '@/constants/Colors';
 
 import { useSharedValue, withTiming } from 'react-native-reanimated';
-import { getSafeAreaScreenHeight, PADDING } from '@/constants/Constants';
+import {
+  getSafeAreaScreenHeight,
+  getWidth,
+  PADDING,
+} from '@/constants/Constants';
+import { useWordStore, WordCard } from '@/storage/storage';
+import Button from '@/components/Button';
+
+const width = getWidth();
 
 export default function HomeScreen() {
   const [animating, setAnimating] = useState(false);
-  const { words } = useData();
+  const { getRandomWords, words: wordList } = useWordStore();
   const activeIndex = useSharedValue(0);
-  const duration = 1000;
   const height = getSafeAreaScreenHeight();
+  const [words, setWords] = useState<WordCard[]>([]);
 
-  const next = () => {
+  const duration = 1000;
+  const absoluteButtonContainerStyle: ViewStyle = {
+    position: 'absolute',
+    top: height / 2 - PADDING,
+    width: width - PADDING * 2,
+    zIndex: 999,
+    marginHorizontal: PADDING,
+  };
+
+  const startExercise = () => {
+    try {
+      const newWords = getRandomWords(10);
+      if (newWords.length === 0) {
+        Alert.alert('No words saved. Please add some words before proceeding.');
+      } else setWords(newWords);
+    } catch (err) {
+      Alert.alert('Something went wrong, try again');
+    }
+  };
+  const restartExercise = () => {
+    setWords([]);
+    activeIndex.value = 0;
+    setAnimating(false);
+  };
+  const nextCard = () => {
     if (Math.floor(activeIndex.value) !== words.length && !animating) {
       setAnimating(true);
       activeIndex.value = withTiming(activeIndex.value + 1, {
@@ -29,7 +61,7 @@ export default function HomeScreen() {
       setTimeout(() => setAnimating(false), duration);
     }
   };
-  const back = () => {
+  const previousCard = () => {
     if (Math.floor(activeIndex.value) !== 0 && !animating) {
       setAnimating(true);
 
@@ -43,23 +75,36 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.view, { height: height }]}>
-        <TouchableOpacity
-          style={styles.leftHalfButton}
-          onPress={back}></TouchableOpacity>
-        <TouchableOpacity
-          style={styles.rightHalfButton}
-          onPress={next}></TouchableOpacity>
+        {words.length !== 0 ? (
+          <>
+            <TouchableOpacity
+              style={styles.leftHalfButton}
+              onPress={previousCard}></TouchableOpacity>
+            <TouchableOpacity
+              style={styles.rightHalfButton}
+              onPress={nextCard}></TouchableOpacity>
 
-        {words.map((word, index) => (
-          <View style={styles.cardContainer}>
-            <Card
-              key={word.word}
-              data={word}
-              index={index}
-              activeIndex={activeIndex}
-            />
+            {words.map((word, index) => (
+              <View key={word.id} style={styles.cardContainer}>
+                <Card
+                  key={word.word}
+                  data={word}
+                  index={index}
+                  activeIndex={activeIndex}
+                />
+              </View>
+            ))}
+            {words.length === activeIndex.value && !animating && (
+              <View style={absoluteButtonContainerStyle}>
+                <Button label='Restart' onPress={restartExercise} />
+              </View>
+            )}
+          </>
+        ) : (
+          <View style={absoluteButtonContainerStyle}>
+            <Button label='Start Exercise' onPress={startExercise} />
           </View>
-        ))}
+        )}
       </View>
     </SafeAreaView>
   );

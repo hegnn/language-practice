@@ -15,7 +15,7 @@ import {
   CARD_WIDTH,
   getSafeAreaScreenHeight,
 } from '@/constants/Constants';
-import { WordCard } from '@/context/DataProvider';
+import { WordCard } from '@/storage/storage';
 
 const Card = ({
   data,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   frontCard: {
     position: 'absolute',
     zIndex: 1,
-    backgroundColor: '#ccdbfd',
+    backgroundColor: Colors.dark.primaryColor,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1.5,
     backfaceVisibility: 'hidden',
     zIndex: 2,
-    backgroundColor: '#ccdbfd',
+    backgroundColor: Colors.dark.primaryColor,
     justifyContent: 'space-between',
     alignItems: 'center',
   },

@@ -13,3 +13,7 @@ export const getSafeAreaScreenHeight = () => {
   const topInset = useSafeAreaInsets().top;
   return SCREEN_HEIGHT - topInset - 79; // 79 is bottom navigation height;
 };
+
+export const getWidth = () => {
+  return SCREEN_WIDTH;
+};
